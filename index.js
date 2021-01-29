@@ -21,7 +21,19 @@ cron.schedule("*/30 * * * *", async () => {
     all_channels[Math.floor(Math.random() * all_channels.length)].fields["ID"];
   console.log(`selected channel ${channel}`);
 
+  const old_channel = await getSetting("Current Channel");
+
   await setSetting("Current Channel", channel);
+
+  try {
+    app.client.conversations.leave({
+      channel: old_channel,
+    });
+  } catch (e) {}
+
+  app.client.conversations.join({
+    channel,
+  });
 
   await app.client.chat.postMessage({
     token: process.env.SLACK_BOT_TOKEN,
