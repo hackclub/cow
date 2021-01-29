@@ -48,7 +48,7 @@ app.command("/allow-cow", async ({ ack, say, command }) => {
   }
 
   await ack({
-    response_type: "ephemeral",
+    response_type: "in_channel",
     text: `MOO!!! I'll be visiting <#${command.channel_id}> sometime soon :cow:\nType \`/bye-cow\` to remove this channel from my list!`,
   });
 });
