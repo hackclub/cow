@@ -83,7 +83,9 @@ app.command("/cow", async ({ ack }) => {
   await ack({
     text: `Howdy there! I'm your friendly neighborhood cow, here to visit channels and hang out! :cow:\nRight now I'm chillin' in <#${current_channel}>!\nRun \`/allow-cow\` in your personal channel to add it to my visit list! I've got ${channel_count} channels on the list already!\nSee ya later! :cow2:`,
   });
-})(async () => {
+});
+
+(async () => {
   await app.start(process.env.PORT || 3000);
   console.log("app started");
 })();
