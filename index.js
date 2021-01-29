@@ -5,7 +5,9 @@ if (process.env.NODE_ENV != "production") {
 const { App } = require("@slack/bolt");
 const cron = require("node-cron");
 
-const channels = require("airtable").base("appbUtsm8wdAUT22N")("Channels");
+const base = require("airtable").base("appbUtsm8wdAUT22N");
+const channels = base("Channels");
+const data = base("Data");
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -19,7 +21,9 @@ cron.schedule("*/30 * * * *", async () => {
     all_channels[Math.floor(Math.random() * all_channels.length)].fields["ID"];
   console.log(`selected channel ${channel}`);
 
-  app.client.chat.postMessage({
+  await setSetting("Current Channel", channel);
+
+  await app.client.chat.postMessage({
     token: process.env.SLACK_BOT_TOKEN,
     channel,
     text:
@@ -49,7 +53,7 @@ app.command("/allow-cow", async ({ ack, say, command }) => {
 
   await ack({
     response_type: "in_channel",
-    text: `MOO!!! I'll be visiting <#${command.channel_id}> sometime soon :cow:\nType \`/bye-cow\` to remove this channel from my list!`,
+    text: `MOO!!! I'll be visiting <#${command.channel_id}> sometime soon :cow:\nType \`/bye-cow\` to remove this channel from my list! :cow2:`,
   });
 });
 
@@ -91,4 +95,40 @@ async function getRecordByChannelId(id) {
     console.log(e);
     return null;
   }
+}
+
+async function getSetting(key) {
+  try {
+    const matching_data = await data
+      .select({
+        maxRecords: 1,
+        filterByFormula: `Key = "${key}"`,
+      })
+      .all();
+
+    if (matching_data.length >= 1) {
+      return matching_data[0].fields["Value"];
+    } else {
+      return null;
+    }
+  } catch (e) {
+    return key;
+  }
+}
+
+async function setSetting(key, value) {
+  const id = (
+    await data
+      .select({ maxRecords: 1, filterByFormula: `Key = "${key}"` })
+      .all()
+  )[0].id;
+
+  await data.update([
+    {
+      id,
+      fields: {
+        Value: value,
+      },
+    },
+  ]);
 }
