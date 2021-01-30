@@ -1,11 +1,14 @@
+import dotenv from "dotenv";
 if (process.env.NODE_ENV != "production") {
-  require("dotenv").config();
+  dotenv.config();
 }
 
-const { App } = require("@slack/bolt");
-const cron = require("node-cron");
+import { App } from "@slack/bolt";
+import cron from "node-cron";
 
-const base = require("airtable").base("appbUtsm8wdAUT22N");
+import airtable from "airtable";
+
+const base = airtable.base("appbUtsm8wdAUT22N");
 const channels = base("Channels");
 const data = base("Data");
 
@@ -32,12 +35,14 @@ cron.schedule("0 */2 * * *", async () => {
       "MOOOOOO!!! :cow2: I get to spend 2 hours hanging out in your channel! How's it going? :cow:",
   });
 
-  await app.client.chat.postMessage({
-    token: process.env.SLACK_BOT_TOKEN,
-    channel: old_channel,
-    text:
-      "I'm MOOOving on to a different pasture, so see ya later! :wave: It was fun hanging out! :cow:",
-  });
+  if (old_channel != null) {
+    await app.client.chat.postMessage({
+      token: process.env.SLACK_BOT_TOKEN,
+      channel: old_channel,
+      text:
+        "I'm MOOOving on to a different pasture, so see ya later! :wave: It was fun hanging out! :cow:",
+    });
+  }
 });
 
 app.command("/allow-cow", async ({ ack, say, command }) => {
@@ -102,11 +107,11 @@ app.command("/cow", async ({ ack }) => {
 });
 
 (async () => {
-  await app.start(process.env.PORT || 3000);
+  await app.start(parseInt(process.env.PORT as string) || 3000);
   console.log("app started");
 })();
 
-async function getRecordByChannelId(id) {
+async function getRecordByChannelId(id: string) {
   try {
     const matched_channels = await channels
       .select({ maxRecords: 1, filterByFormula: `ID = "${id}"` })
@@ -122,7 +127,7 @@ async function getRecordByChannelId(id) {
   }
 }
 
-async function getSetting(key) {
+async function getSetting(key: string): Promise<string | null> {
   try {
     const matching_data = await data
       .select({
@@ -141,7 +146,7 @@ async function getSetting(key) {
   }
 }
 
-async function setSetting(key, value) {
+async function setSetting(key: string, value: string) {
   const id = (
     await data
       .select({ maxRecords: 1, filterByFormula: `Key = "${key}"` })
