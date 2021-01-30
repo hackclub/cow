@@ -17,7 +17,7 @@ const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
 
-cron.schedule("0 */2 * * *", async () => {
+cron.schedule("0 * * * *", async () => {
   const all_channels = await channels.select().all();
 
   const channel =
@@ -32,7 +32,7 @@ cron.schedule("0 */2 * * *", async () => {
     token: process.env.SLACK_BOT_TOKEN,
     channel,
     text:
-      "MOOOOOO!!! :cow2: I get to spend 2 hours hanging out in your channel! How's it going? :cow:",
+      "MOOOOOO!!! :cow2: I get to spend an hour hanging out in your channel! How's it going? :cow:",
   });
 
   if (old_channel != null) {
