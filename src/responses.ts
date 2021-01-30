@@ -50,6 +50,12 @@ export default {
   moo: (user: string, channel: string) => {
     return randomResponse(["MOOOOOO :cow2:", "Mooo ??", ":cow:", ":cow2:"]);
   },
+  interest_request: (user: string, channel: string) => {
+    return randomResponse([
+      "Hmm... I like mooing!",
+      "I really like grazing in channels (like this one!) :cow2:",
+    ]);
+  },
 } as {
   [key: string]: (user: string, channel: string) => string;
 };
