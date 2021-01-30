@@ -44,6 +44,13 @@ cron.schedule("*/30 * * * *", async () => {
 });
 
 app.command("/allow-cow", async ({ ack, say, command }) => {
+  if (!command.channel_id.startsWith("C")) {
+    await ack({
+      text: "Sorry, this only works in public channels!",
+    });
+    return;
+  }
+
   if (await getRecordByChannelId(command.channel_id)) {
     await ack({
       text: "MOOO!!! This channel is already on my visit list!",
