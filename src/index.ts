@@ -118,13 +118,17 @@ app.command("/cow", async ({ ack }) => {
 app.message(async ({ message, say }) => {
   message = message as GenericMessageEvent;
   if (message.channel == (await getSetting("Current Channel"))) {
-    say(
-      await processMessage({
-        text: message.text as string,
-        user: message.user,
-        channel: message.channel,
-      })
-    );
+    try {
+      await say(
+        await processMessage({
+          text: message.text as string,
+          user: message.user,
+          channel: message.channel,
+        })
+      );
+    } catch (e) {
+      console.log(e);
+    }
   }
 });
 

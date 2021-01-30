@@ -15,5 +15,9 @@ export async function processMessage({
   channel: string;
 }) {
   const response = await client.message(text, {});
-  return responses[response.intents[0].name](user, channel);
+  if (response.intents.length > 0) {
+    return responses[response.intents[0].name](user, channel);
+  } else {
+    throw "No response";
+  }
 }
