@@ -14,7 +14,7 @@ const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
 
-cron.schedule("*/30 * * * *", async () => {
+cron.schedule("0 */2 * * *", async () => {
   const all_channels = await channels.select().all();
 
   const channel =
@@ -29,7 +29,7 @@ cron.schedule("*/30 * * * *", async () => {
     token: process.env.SLACK_BOT_TOKEN,
     channel,
     text:
-      "MOOOOOO!!! :cow2: I get to spend 30 minutes hanging out in your channel! How's it going? :cow:",
+      "MOOOOOO!!! :cow2: I get to spend 2 hours hanging out in your channel! How's it going? :cow:",
   });
 
   await app.client.chat.postMessage({
