@@ -25,23 +25,18 @@ cron.schedule("*/30 * * * *", async () => {
 
   await setSetting("Current Channel", channel);
 
-  try {
-    app.client.conversations.leave({
-      token: process.env.SLACK_BOT_TOKEN,
-      channel: old_channel,
-    });
-  } catch (e) {}
-
-  app.client.conversations.join({
-    token: process.env.SLACK_BOT_TOKEN,
-    channel,
-  });
-
   await app.client.chat.postMessage({
     token: process.env.SLACK_BOT_TOKEN,
     channel,
     text:
       "MOOOOOO!!! :cow2: I get to spend 30 minutes hanging out in your channel! How's it going? :cow:",
+  });
+
+  await app.client.chat.postMessage({
+    token: process.env.SLACK_BOT_TOKEN,
+    old_channel,
+    text:
+      "I'm MOOOving on to a different pasture, so see ya later! :wave: It was fun hanging out! :cow:",
   });
 });
 
