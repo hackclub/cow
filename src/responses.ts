@@ -39,6 +39,17 @@ export default {
       "I'm working on the Pro Tractor™! :tractor:",
     ]);
   },
+  affirmation: (user: string, channel: string) => {
+    return randomResponse([
+      "Aww thanks! :heart:",
+      "Wow thanks a lot! :sparkling_heart:",
+      "You're not too bad yourself! :cow:",
+      "Thanks!",
+    ]);
+  },
+  moo: (user: string, channel: string) => {
+    return randomResponse(["MOOOOOO :cow2:", "Mooo ??", ":cow:", ":cow2:"]);
+  },
 } as {
   [key: string]: (user: string, channel: string) => string;
 };
