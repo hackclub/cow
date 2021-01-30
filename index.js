@@ -34,7 +34,7 @@ cron.schedule("*/30 * * * *", async () => {
 
   await app.client.chat.postMessage({
     token: process.env.SLACK_BOT_TOKEN,
-    old_channel,
+    channel: old_channel,
     text:
       "I'm MOOOving on to a different pasture, so see ya later! :wave: It was fun hanging out! :cow:",
   });
