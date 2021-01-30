@@ -1,16 +1,20 @@
 import dotenv from "dotenv";
+
 if (process.env.NODE_ENV != "production") {
   dotenv.config();
 }
 
-import { App } from "@slack/bolt";
+import { App, GenericMessageEvent } from "@slack/bolt";
 import cron from "node-cron";
 
-import airtable from "airtable";
-
-const base = airtable.base("appbUtsm8wdAUT22N");
-const channels = base("Channels");
-const data = base("Data");
+import {
+  getSetting,
+  setSetting,
+  getChannel,
+  getAllChannels,
+  channels,
+} from "./db";
+import { processMessage } from "./wit";
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -18,7 +22,7 @@ const app = new App({
 });
 
 cron.schedule("0 * * * *", async () => {
-  const all_channels = await channels.select().all();
+  const all_channels = await getAllChannels();
 
   const channel =
     all_channels[Math.floor(Math.random() * all_channels.length)].fields["ID"];
@@ -27,6 +31,11 @@ cron.schedule("0 * * * *", async () => {
   const old_channel = await getSetting("Current Channel");
 
   await setSetting("Current Channel", channel);
+
+  await app.client.conversations.join({
+    token: process.env.SLACK_BOT_TOKEN,
+    channel,
+  });
 
   await app.client.chat.postMessage({
     token: process.env.SLACK_BOT_TOKEN,
@@ -53,7 +62,7 @@ app.command("/allow-cow", async ({ ack, say, command }) => {
     return;
   }
 
-  if (await getRecordByChannelId(command.channel_id)) {
+  if (await getChannel(command.channel_id)) {
     await ack({
       text: "MOOO!!! This channel is already on my visit list!",
     });
@@ -80,7 +89,7 @@ app.command("/allow-cow", async ({ ack, say, command }) => {
 
 app.command("/bye-cow", async ({ ack, command }) => {
   try {
-    const channel = await getRecordByChannelId(command.channel_id);
+    const channel = await getChannel(command.channel_id);
     if (channel) {
       await channels.destroy(channel.id);
     }
@@ -106,59 +115,20 @@ app.command("/cow", async ({ ack }) => {
   });
 });
 
+app.message(async ({ message, say }) => {
+  message = message as GenericMessageEvent;
+  if (message.channel == (await getSetting("Current Channel"))) {
+    say(
+      await processMessage({
+        text: message.text as string,
+        user: message.user,
+        channel: message.channel,
+      })
+    );
+  }
+});
+
 (async () => {
   await app.start(parseInt(process.env.PORT as string) || 3000);
   console.log("app started");
 })();
-
-async function getRecordByChannelId(id: string) {
-  try {
-    const matched_channels = await channels
-      .select({ maxRecords: 1, filterByFormula: `ID = "${id}"` })
-      .all();
-    if (matched_channels.length == 0) {
-      return null;
-    }
-
-    return matched_channels[0];
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
-}
-
-async function getSetting(key: string): Promise<string | null> {
-  try {
-    const matching_data = await data
-      .select({
-        maxRecords: 1,
-        filterByFormula: `Key = "${key}"`,
-      })
-      .all();
-
-    if (matching_data.length >= 1) {
-      return matching_data[0].fields["Value"];
-    } else {
-      return null;
-    }
-  } catch (e) {
-    return key;
-  }
-}
-
-async function setSetting(key: string, value: string) {
-  const id = (
-    await data
-      .select({ maxRecords: 1, filterByFormula: `Key = "${key}"` })
-      .all()
-  )[0].id;
-
-  await data.update([
-    {
-      id,
-      fields: {
-        Value: value,
-      },
-    },
-  ]);
-}
