@@ -41,7 +41,7 @@ cron.schedule("0 * * * *", async () => {
     token: process.env.SLACK_BOT_TOKEN,
     channel,
     text:
-      "MOOOOOO!!! :cow2: I get to spend an hour hanging out in your channel! How's it going? :cow:",
+      "MOOOOOO!!! :cow2: I get to spend an hour hanging out in your channel, so let's talk! :cow:",
   });
 
   if (old_channel != null) {
@@ -117,6 +117,7 @@ app.command("/cow", async ({ ack }) => {
 
 app.message(async ({ message, say }) => {
   message = message as GenericMessageEvent;
+
   if (message.channel == (await getSetting("Current Channel"))) {
     try {
       await say(

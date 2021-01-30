@@ -1,6 +1,7 @@
-function randomResponse(responses: string[]): string {
+export function randomResponse(responses: string[]): string {
   return responses[Math.floor(Math.random() * responses.length)];
 }
+
 export default {
   greeting: (user: string, channel: string) => {
     return randomResponse([
@@ -20,7 +21,7 @@ export default {
   feelings_request: (user: string, channel: string) => {
     return randomResponse([
       "I'm doing great! :cow2: (or MOOing great hehe)",
-      "It's going awesome, thanks for asking!",
+      "It's going great, thanks for asking!",
       "Not bad, for a talking cow :cow2:",
     ]);
   },
