@@ -27,11 +27,13 @@ cron.schedule("*/30 * * * *", async () => {
 
   try {
     app.client.conversations.leave({
+      token: process.env.SLACK_BOT_TOKEN,
       channel: old_channel,
     });
   } catch (e) {}
 
   app.client.conversations.join({
+    token: process.env.SLACK_BOT_TOKEN,
     channel,
   });
 
