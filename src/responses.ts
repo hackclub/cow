@@ -16,13 +16,15 @@ export default {
       "Well _that_ wasn't nice :(",
       "I have feelings, you know :pensivecowboy:",
       "I'm crying inside :sob:",
+      "Take that back please :sadge:",
     ]);
   },
   feelings_request: (user: string, channel: string) => {
     return randomResponse([
       "I'm doing great! :cow2: (or MOOing great hehe)",
-      "It's going great, thanks for asking!",
+      "I'm doing great, thanks for asking!",
       "Not bad, for a talking cow :cow2:",
+      "Life's good! :sunglasses:",
     ]);
   },
   identity_request: (user: string, channel: string) => {
@@ -30,13 +32,15 @@ export default {
       "I'm the Hack Club Cow, your friendly neighborhood cow! MOOOOO :cow:",
       "I'm just a traveling cow, passing through the lands of Hack Club!",
       "MOOOOOO :cow2:",
+      "I'm just your local cow! :cow2:",
     ]);
   },
   projects_request: (user: string, channel: string) => {
     return randomResponse([
       "Hmm... right now I'm inventing a new grass planter!",
       "I'm building the latest and greatest barn!",
-      "I'm working on the Pro Tractor™! :tractor:",
+      "I'm working on the latest Pro Tractor™! :tractor:",
+      "Hmm... I'm not working on any cool projects right now.",
     ]);
   },
   affirmation: (user: string, channel: string) => {
@@ -54,6 +58,18 @@ export default {
     return randomResponse([
       "Hmm... I like mooing!",
       "I really like grazing in channels (like this one!) :cow2:",
+      "Gnawing on grass is kinda my thing.",
+      "I love hanging out with other animals, and humans too!",
+      `Right now I like hanging out in <#${channel}>! :wink:`,
+    ]);
+  },
+  goodbye: (user: string, channel: string) => {
+    return randomResponse([
+      `See ya later, <@${user}>! :wave:`,
+      "See you soon! :cow2:",
+      "Byeeee!!",
+      "See you later! :cow:",
+      "Bye! See you later!",
     ]);
   },
 } as {
