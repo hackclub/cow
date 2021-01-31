@@ -15,6 +15,7 @@ import {
   channels,
 } from "./db";
 import { processMessage } from "./wit";
+import { MessageRepliedEvent } from "@slack/bolt/dist/types/events/message-events";
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -118,7 +119,10 @@ app.command("/cow", async ({ ack }) => {
 app.message(async ({ message, say }) => {
   message = message as GenericMessageEvent;
 
-  if (message.channel == (await getSetting("Current Channel"))) {
+  if (
+    message.channel == (await getSetting("Current Channel")) &&
+    (message as any).thread_ts == null
+  ) {
     try {
       await say(
         await processMessage({
