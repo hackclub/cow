@@ -120,7 +120,8 @@ app.message(async ({ message, say }) => {
   message = message as GenericMessageEvent;
 
   if (
-    message.channel == (await getSetting("Current Channel")) &&
+    (message.channel == (await getSetting("Current Channel")) ||
+      message.channel == "C01LZB1F32M") &&
     (message as any).thread_ts == null
   ) {
     try {
