@@ -19,6 +19,14 @@ export default {
       "Take that back please :sadge:",
     ]);
   },
+  danger: (user: string, channel: string) => {
+    return randomResponse([
+      "Excuse me, what?!?!",
+      "I'm sorry, but that's unacceptable!",
+      "Holy cow I hate you",
+      "Be more MINDFUL PLEASE",
+    ]);
+  },
   feelings_request: (user: string, channel: string) => {
     return randomResponse([
       "I'm doing great! :cow2: (or MOOing great hehe)",
