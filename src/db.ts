@@ -22,11 +22,15 @@ export async function getChannel(id: string) {
   }
 }
 
-export async function getAllChannels() {
-  return await channels.select().all();
+export async function getAllChannels(except?: string) {
+  let formula = "";
+  if (except != null) {
+    formula = `ID != "${except}"`;
+  }
+  return await channels.select({ filterByFormula: formula }).all();
 }
 
-export async function getSetting(key: string): Promise<string | null> {
+export async function getSetting(key: string): Promise<string | undefined> {
   try {
     const matching_data = await data
       .select({
@@ -38,7 +42,7 @@ export async function getSetting(key: string): Promise<string | null> {
     if (matching_data.length >= 1) {
       return matching_data[0].fields["Value"];
     } else {
-      return null;
+      return undefined;
     }
   } catch (e) {
     return key;

@@ -23,13 +23,13 @@ const app = new App({
 });
 
 cron.schedule("0 * * * *", async () => {
-  const all_channels = await getAllChannels();
+  const old_channel = await getSetting("Current Channel");
+
+  const all_channels = await getAllChannels(old_channel);
 
   const channel =
     all_channels[Math.floor(Math.random() * all_channels.length)].fields["ID"];
   console.log(`selected channel ${channel}`);
-
-  const old_channel = await getSetting("Current Channel");
 
   await setSetting("Current Channel", channel);
 
