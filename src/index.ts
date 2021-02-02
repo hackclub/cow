@@ -116,6 +116,15 @@ app.command("/cow", async ({ ack }) => {
   });
 });
 
+app.command("/cow-channels", async ({ ack }) => {
+  const channels = await getAllChannels();
+  await ack({
+    text: `:cow: I'm in the following channels:\n${channels
+      .map((a) => "<#" + a.fields["ID"] + ">")
+      .join("\n")}`,
+  });
+});
+
 app.message(async ({ message, say }) => {
   message = message as GenericMessageEvent;
 
