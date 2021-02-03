@@ -27,6 +27,14 @@ export default {
       "Be more MINDFUL PLEASE",
     ]);
   },
+  sad: (user: string, channel: string) => {
+    return randomResponse([
+      "Awww that sucks :(",
+      "I'm sending virtual cow hugs",
+      `Hey everyone, come and make <@${user}> feel better!`,
+      "I hope you feel better",
+    ]);
+  },
   feelings_request: (user: string, channel: string) => {
     return randomResponse([
       "I'm doing great! :cow2: (or MOOing great hehe)",
