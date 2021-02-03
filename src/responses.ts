@@ -31,7 +31,7 @@ export default {
     return randomResponse([
       "Awww that sucks :(",
       "I'm sending virtual cow hugs",
-      "<@U017EPB6LE9> come and make them feel better!",
+      `Hey everyone, come and make <@${user}> feel better!`,
       "I hope you feel better",
     ]);
   },
