@@ -96,7 +96,8 @@ app.command("/bye-cow", async ({ ack, command }) => {
     }
 
     await ack({
-      text: "Success!",
+      text: "Success! I'll leave you alone now :cow2:",
+      response_type: "in_channel"
     });
   } catch (e) {
     await ack({
