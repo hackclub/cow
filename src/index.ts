@@ -97,7 +97,7 @@ app.command("/bye-cow", async ({ ack, command }) => {
 
     await ack({
       text: "Success! I'll leave you alone now :cow2:",
-      response_type: "in_channel"
+      response_type: "in_channel",
     });
   } catch (e) {
     await ack({
@@ -118,11 +118,17 @@ app.command("/cow", async ({ ack }) => {
 });
 
 app.command("/cow-channels", async ({ ack }) => {
-  const channels = await getAllChannels();
+  const channels = (await getAllChannels()).map((a) => a.fields["ID"]);
+  const current_channel = await getSetting("Current Channel");
+
+  const display_channels = channels.map(
+    (a) => `${current_channel == a ? ":arrow_right: " : ""}<#${a}>`
+  );
+
   await ack({
-    text: `:cow: I'm in the following channels:\n${channels
-      .map((a) => "<#" + a.fields["ID"] + ">")
-      .join("\n")}`,
+    text: `:cow: I'm in the following channels:\n${display_channels.join(
+      "\n"
+    )}`,
   });
 });
 
