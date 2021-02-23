@@ -102,7 +102,10 @@ app.command("/bye-cow", async ({ ack, command }) => {
       response_type: "in_channel",
     });
 
-    await moveChannels();
+    // Switch channels if leaving the current one
+    if ((await getSetting("Current Channel")) == command.channel_id) {
+      await moveChannels();
+    }
   } catch (e) {
     await ack({
       response_type: "ephemeral",
