@@ -22,7 +22,7 @@ const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
 
-cron.schedule("0 * * * *", async () => {
+async function moveChannels() {
   const old_channel = await getSetting("Current Channel");
 
   const all_channels = await getAllChannels(old_channel);
@@ -53,7 +53,9 @@ cron.schedule("0 * * * *", async () => {
         "I'm MOOOving on to a different pasture, so see ya later! :wave: It was fun hanging out! :cow:",
     });
   }
-});
+}
+
+cron.schedule("0 * * * *", moveChannels);
 
 app.command("/allow-cow", async ({ ack, say, command }) => {
   if (!command.channel_id.startsWith("C")) {
@@ -99,6 +101,8 @@ app.command("/bye-cow", async ({ ack, command }) => {
       text: "Success! I'll leave you alone now :cow2:",
       response_type: "in_channel",
     });
+
+    await moveChannels();
   } catch (e) {
     await ack({
       response_type: "ephemeral",
